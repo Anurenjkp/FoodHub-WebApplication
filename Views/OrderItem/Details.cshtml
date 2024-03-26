@@ -1,0 +1,42 @@
+﻿@model FoodHub.Models.OrderItem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>OrderItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.food.FName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.food.FName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.order.orderType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.order.orderType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.quantity)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.itemId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

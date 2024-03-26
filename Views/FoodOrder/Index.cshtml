@@ -1,0 +1,69 @@
+﻿@model IEnumerable<FoodHub.Models.FoodOrder>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.customer.CName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.totalPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.orderType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.paymentStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.orderStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Token)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.customer.CName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.totalPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.orderType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.paymentStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.orderStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Token)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Oid }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Oid }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Oid })
+        </td>
+    </tr>
+}
+
+</table>

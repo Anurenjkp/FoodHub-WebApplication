@@ -1,0 +1,110 @@
+﻿@model IEnumerable<FoodHub.Models.Food>
+
+<h1 class="text-center restName">@ViewBag.restName</h1>
+<br/>
+
+@if (Model.Any())
+{
+    <div class="row">
+        <div class="col-sm-3">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Sort By</option>
+                <option value="1">Price: Low to High</option>
+                <option value="2">Price: High to Low</option>
+            </select>
+        </div>
+        <div class="col-sm-1">
+            <input type="checkbox" class="btn-check" id="vegcheck" autocomplete="off">
+            <label class="btn btn-outline-success" for="vegcheck">Veg</label><br>
+        </div>
+        <div class="col-sm-1">
+            <input type="checkbox" class="btn-check" id="nonvegcheck" autocomplete="off">
+            <label class="btn btn-outline-danger" for="nonvegcheck">NonVeg</label><br>
+        </div>
+        <div class="col-sm-2">
+            <form method="post" action="@Url.Action("Cart", "Home")">
+                <input type="hidden" id="flist" name="flist" value="[]" />
+                <button type="submit" class="btn btn-warning" id="cartbtn" disabled>🛒</button>
+            </form>
+        </div>
+
+    </div>
+
+    <hr/>
+    <br/>
+    <div class="container">
+        <div class="row">
+            @foreach (var food in Model)
+            {
+                if (food.foodCount > 0)
+                {
+                <div class="col">
+                    <div class="card m-1" style="width: 18rem;">
+                        <div class="card-body">
+                            <img src="../images/@food.image" class="ratio ratio-1x1" alt="food" />
+                            <h5 class="card-title">@food.FName </h5>
+                            @if (food.veg == "1")
+                            {
+                                <span class="badge bg-success">Veg</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Non-Veg</span>
+                            }
+                            <p class="card-text">₹ @food.price</p>
+                            <button class="btn btn-warning rounding addToCart" data-food-id="@food.Fid">Add to Cart</button>
+                            <button class="btn btn-outline-danger rounding removeFromCart" data-food-id="@food.Fid" hidden>Remove</button>
+                        </div>
+                    </div>
+                </div>
+                }
+             }
+        </div>
+    </div>
+  
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var foodList = [];
+            $(".addToCart").click(function () {
+                var foodId = $(this).data("food-id");
+                var $button = $(this);
+                if (foodList.indexOf(foodId) === -1) {
+                    foodList.push(foodId);
+                    $button.text("Added");
+                    $button.toggleClass("btn-warning btn-success");
+                    $(".removeFromCart[data-food-id='" + foodId + "']").removeAttr("hidden");
+                    if (foodList.length > 0) {
+                        $("#cartbtn").removeAttr("disabled");
+                        $("#cartbtn").text("🛒 " + foodList.length);
+                    }
+                    console.log("Cart List : " + foodList);
+                    $('#flist').val(JSON.stringify(foodList));
+                }
+            });
+            $(".removeFromCart").click(function () {
+                var foodId = $(this).data("food-id");
+                var index = foodList.indexOf(foodId);
+                if (index !== -1) {
+                    foodList.splice(index, 1);
+                    console.log("Cart List : " + foodList);
+                    $('#flist').val(JSON.stringify(foodList));
+                    $(this).attr("hidden", true);
+                    $(".addToCart[data-food-id='" + foodId + "']").text("Add to Cart");
+                    $(".addToCart[data-food-id='" + foodId + "']").toggleClass("btn-success btn-warning");
+                    $("#cartbtn").text("🛒 " + foodList.length);
+                    if(foodList.length==0)
+                        $("#cartbtn").attr("disabled", true);
+                }
+            });
+        });
+    </script>
+    }
+}
+else
+{
+    <h3 class="text-center text-danger">No Food is Available</h3>
+}

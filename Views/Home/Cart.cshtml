@@ -1,0 +1,184 @@
+﻿@model IEnumerable<FoodHub.Models.Food>
+
+@if (Model.Any())
+{
+    <center>
+        <button class="btn btn-lg btn-success" id="next">@Html.ActionLink("Go to Confirmation Page 🍜", "ConfirmPage", new { @class = "nav-link text-light" })</button>
+    </center>
+    
+    <table class="table table-hover">
+       <thead>
+            <tr>
+                <th>Item No</th>
+                <th>
+                   Name
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                   Price
+                </th>
+            </tr>
+       </thead>
+        @foreach(var food in Model)
+        {
+            <tr>
+                <td>@(Model.ToList().IndexOf(food) + 1)</td>
+                <input type="hidden" class="foodid" value="@food.Fid"/>
+            <td>@food.FName</td>
+            <td>
+                    <div class="btn-group me-2" role="group" aria-label="First group">
+                        <button type="button" class="btn btn-outline-secondary minus">-</button>
+                        <input type="text" class="form-control quantity" value="1" readonly style="width:45px;">
+                        <button type="button" class="btn btn-outline-secondary plus">+</button>
+                        <input type="hidden" id="count" value="@food.foodCount"/>
+
+                    </div>
+            </td>
+                <td><p class="foodPrice">@food.price.00</p></td>
+            </tr>
+        }
+        <tr>
+            <td></td>
+            <th>Order Type</th>
+            <td>
+                <select id="orderType" class="form-select" style="max-width:150px;">
+                    <option value="Dine-in">Dine-in</option>,
+                    <option value="Parcel">Parcel</option>
+                </select>
+            </td>
+            <td><p id="orderTypeValue" class="foodPrice">0</p></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Table No :</td>
+            <td><input type="number" id="token" required/></td>
+            <td></td>
+        </tr>
+        <tr class="table-warning" style="height: 80px; vertical-align: middle;">
+            <td colspan="2"></td>
+            <th><h4>Total : </h4></th>
+            <th><h4><p id="total">0</p></h4></th>
+        </tr>
+    </table>
+
+    <center>
+
+        <button id="confirmOrder" class="btn btn-lg btn-warning" style="margin:20px;">Confirm Order</button>
+        <button class="btn btn-lg btn-outline-danger" id="cancel">Cancel Order</button>
+        
+    </center>
+}
+else
+{
+    <h2>Cart Empty</h2>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#next').hide();
+            $('#cancel').show();
+            $('#confirmOrder').show();
+            let cartSize = @Model.Count();
+            calculateTotal();
+        });
+        $('.plus').click(function () {
+            const input = $(this).closest('tr').find('.quantity');
+            let quantity = parseInt(input.val());
+            let max = $(this).closest('tr').find('#count').val();
+            if (!isNaN(quantity) && quantity <= max) {
+                increaseFoodPrice($(this));
+                quantity++;
+                input.val(quantity);
+                calculateTotal();
+            }
+        });
+        $('.minus').click(function () {
+            const input = $(this).closest('tr').find('.quantity');
+            let quantity = parseInt(input.val());
+            if (!isNaN(quantity) && quantity > 1) {
+                decreaseFoodPrice($(this));
+                quantity--;
+                input.val(quantity);
+                calculateTotal();
+            }
+        });
+        $('#orderType').change(function () {
+            const selectedValue = $(this).val();
+            if(selectedValue=="Dine-in")
+                $('#orderTypeValue').text(0);
+            else
+                $('#orderTypeValue').text(10);
+            calculateTotal();
+        });
+        $('#cancel').click(function () {
+            window.history.back();
+        });
+        $('#confirmOrder').click(function () {
+            let check = confirm("Are you sure you want to confirm ?");
+            if (check) {
+                var orderitem = {};
+                orderitem.Rid = @Model.ElementAt(0).Rid;
+                orderitem.totalPrice = parseInt($("#total").text());
+                orderitem.orderType = $('#orderType').val();
+                orderitem.token = $('#token').val();
+                let quant = [];
+                $('.quantity').each(function () {
+                    const q = parseInt($(this).val());
+                    quant.push(q);
+                });
+                let foods = [];
+                $('.foodid').each(function () {
+                    const q = parseInt($(this).val());
+                    foods.push(q);
+                });
+                orderitem.quantity = quant;
+                orderitem.FoodList = foods;
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/confirmOrder',
+                    data: JSON.stringify(orderitem),
+                    contentType: 'application/json',
+                    dataType:"JSON",
+                    success: function (response) {
+                        alert(response.message);
+                        $('#next').show();
+                        $('#cancel').hide();
+                        $('#confirmOrder').hide();
+                    },
+                    error: function (error) {
+                        console.error('Error confirming order:', error.message);
+                    }
+                });
+                }
+        });
+
+        function increaseFoodPrice(button) {
+            const row = button.closest('tr');
+            const price = parseFloat(row.find('.foodPrice').text());
+            const quantity = parseInt(row.find('.quantity').val());
+            const orgPrice = (price / quantity);
+            const Final = parseFloat(price) + parseFloat(orgPrice);
+            row.find('.foodPrice').text(Final.toFixed(2));
+        }
+        function decreaseFoodPrice(button) {
+            const row = button.closest('tr');
+            const price = parseFloat(row.find('.foodPrice').text());
+            const quantity = parseInt(row.find('.quantity').val());
+            const orgPrice = (price / quantity);
+            const Final = price - orgPrice;
+            row.find('.foodPrice').text(Final.toFixed(2));
+        }
+        function calculateTotal() {
+            let total = 0;
+            $('.foodPrice').each(function () {
+                const price = parseFloat($(this).text());
+                total += price;
+            });
+             $("#total").text(`${total}.00`);
+        }
+    </script>
+}

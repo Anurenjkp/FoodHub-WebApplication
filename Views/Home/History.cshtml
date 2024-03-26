@@ -1,0 +1,50 @@
+﻿@model IEnumerable<FoodHub.Models.FoodOrder>
+<h1 class="text-center restName">History</h1>
+<br/>
+<table class="table table-hover">
+     <thead>
+        <tr class="table-dark">
+             <th>Token</th>
+             <th>Date</th>
+             <th>Price</th>
+             <th>Order Status</th>
+             <th></th>
+         </tr>
+     </thead>
+     <tbody>
+        @foreach(var order in Model)
+        {
+            <tr>
+                <td>@order.Token@order.Oid</td>
+                <td>@order.date</td>
+                <td>@order.totalPrice</td>
+                @if (order.orderStatus == "pending")
+                {
+                    <td><span class="badge bg-primary">Waiting</span></td>
+                }
+                else if (order.orderStatus == "accepted")
+                {
+                    <td>
+                        <span class="badge bg-warning">Accepted</span>
+                    </td>
+                }
+                else if (order.orderStatus == "done")
+                {
+                    <td>
+                        <span class="badge bg-success">Done</span>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <span class="badge bg-danger">Failed</span>
+                    </td>
+                }
+            <td>
+                <button class="btn bg-dark">@Html.ActionLink("Repeat Order", "RepeatOrder", new { id = order.Oid }, new { @class = "nav-link text-light" })</button>
+            </td>
+            </tr>
+        }
+    </tbody>
+ </table>
+
