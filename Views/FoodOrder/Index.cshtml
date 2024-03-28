@@ -4,66 +4,80 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.customer.CName)
+            Customer Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.date)
+            Date - Time
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.totalPrice)
+            Total Price
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.orderType)
+            Order Type
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.paymentStatus)
+            Payment
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.orderStatus)
+            Order Status
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Token)
+            @Html.DisplayNameFor(model => model.Token) No
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.customer.CName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.totalPrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.orderType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.paymentStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.orderStatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Token)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Oid }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Oid }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Oid })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer.CName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.orderType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.paymentStatus)
+            </td>
+            @if (item.orderStatus == "pending")
+            {
+                <td><span class="badge bg-primary">Waiting</span></td>
+            }
+            else if (item.orderStatus == "accepted")
+            {
+                <td>
+                    <span class="badge bg-warning">Accepted</span>
+                </td>
+            }
+            else if (item.orderStatus == "done")
+            {
+                <td>
+                    <span class="badge bg-success">Done</span>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <span class="badge bg-danger">Failed</span>
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Token)@item.Oid
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.Oid })
+            </td>
+        </tr>
+    }
 
 </table>

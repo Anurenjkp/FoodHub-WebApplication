@@ -3,39 +3,39 @@
 @if (Model.Any())
 {
     <center>
-        <button class="btn btn-lg btn-success" id="next">@Html.ActionLink("Go to Confirmation Page 🍜", "ConfirmPage", new { @class = "nav-link text-light" })</button>
+        <input type="hidden" id="Orderid" value="0" />
+        <button class="btn btn-lg btn-success" id="next">Order Placed!</button>
     </center>
-    
     <table class="table table-hover">
-       <thead>
+        <thead>
             <tr>
                 <th>Item No</th>
                 <th>
-                   Name
+                    Name
                 </th>
                 <th>
                     Quantity
                 </th>
                 <th>
-                   Price
+                    Price
                 </th>
             </tr>
-       </thead>
-        @foreach(var food in Model)
+        </thead>
+        @foreach (var food in Model)
         {
             <tr>
                 <td>@(Model.ToList().IndexOf(food) + 1)</td>
-                <input type="hidden" class="foodid" value="@food.Fid"/>
-            <td>@food.FName</td>
-            <td>
+                <input type="hidden" class="foodid" value="@food.Fid" />
+                <td>@food.FName</td>
+                <td>
                     <div class="btn-group me-2" role="group" aria-label="First group">
                         <button type="button" class="btn btn-outline-secondary minus">-</button>
                         <input type="text" class="form-control quantity" value="1" readonly style="width:45px;">
                         <button type="button" class="btn btn-outline-secondary plus">+</button>
-                        <input type="hidden" id="count" value="@food.foodCount"/>
+                        <input type="hidden" id="count" value="@food.foodCount" />
 
                     </div>
-            </td>
+                </td>
                 <td><p class="foodPrice">@food.price.00</p></td>
             </tr>
         }
@@ -50,10 +50,12 @@
             </td>
             <td><p id="orderTypeValue" class="foodPrice">0</p></td>
         </tr>
-        <tr>
+        <tr id="tabletr">
             <td></td>
             <td>Table No :</td>
-            <td><input type="number" id="token" required/></td>
+            <td>
+                <input type="number" id="token" />
+            </td>
             <td></td>
         </tr>
         <tr class="table-warning" style="height: 80px; vertical-align: middle;">
@@ -67,7 +69,7 @@
 
         <button id="confirmOrder" class="btn btn-lg btn-warning" style="margin:20px;">Confirm Order</button>
         <button class="btn btn-lg btn-outline-danger" id="cancel">Cancel Order</button>
-        
+
     </center>
 }
 else
@@ -108,18 +110,27 @@ else
         });
         $('#orderType').change(function () {
             const selectedValue = $(this).val();
-            if(selectedValue=="Dine-in")
+            if (selectedValue == "Dine-in") {
                 $('#orderTypeValue').text(0);
-            else
+                $('#token').val(0);
+                $('#tabletr').show();
+            }
+            else {
+                $('#token').val(10);
                 $('#orderTypeValue').text(10);
+                $('#tabletr').hide();
+            }
+
             calculateTotal();
+        });
+        $('#next').click(function () {
+            const orderId = $('#Orderid').val();
+            window.location.href = `/Home/ConfirmPage?id=${orderId}`;
         });
         $('#cancel').click(function () {
             window.history.back();
         });
         $('#confirmOrder').click(function () {
-            let check = confirm("Are you sure you want to confirm ?");
-            if (check) {
                 var orderitem = {};
                 orderitem.Rid = @Model.ElementAt(0).Rid;
                 orderitem.totalPrice = parseInt($("#total").text());
@@ -136,24 +147,31 @@ else
                     foods.push(q);
                 });
                 orderitem.quantity = quant;
-                orderitem.FoodList = foods;
+            orderitem.FoodList = foods;
+            if (orderitem.token > 0 && orderitem.token < 99) {
                 $.ajax({
                     type: 'POST',
                     url: '/Home/confirmOrder',
                     data: JSON.stringify(orderitem),
                     contentType: 'application/json',
-                    dataType:"JSON",
+                    dataType: "JSON",
                     success: function (response) {
                         alert(response.message);
-                        $('#next').show();
-                        $('#cancel').hide();
-                        $('#confirmOrder').hide();
+                        if (response.success) {
+                            $('#Orderid').val(response.data);
+                            $('#next').show();
+                            $('#cancel').hide();
+                            $('#confirmOrder').hide();
+                        }
                     },
                     error: function (error) {
                         console.error('Error confirming order:', error.message);
                     }
                 });
-                }
+            }
+            else {
+                alert("Table No Required");
+            }
         });
 
         function increaseFoodPrice(button) {

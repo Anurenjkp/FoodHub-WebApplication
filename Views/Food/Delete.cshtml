@@ -1,72 +1,116 @@
 ﻿@model FoodHub.Models.Food
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Edit";
 }
 
-<h2>Delete</h2>
+<h2>Edit</h2>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Food</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.restaurant.RName)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.restaurant.RName)
-        </dd>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.price)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.price)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.image)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.image)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.veg)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.veg)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.foodCount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.foodCount)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Fid)
+        <img src="~/images/@Model.image" width="200" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.price, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.foodCount, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.foodCount, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.foodCount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.veg, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <label>
+                            <input type="radio" name="veg" value="1" /> Veg
+                        </label>
+                        <label>
+                            <input type="radio" name="veg" value="0" /> Non-Veg
+                        </label>
+                        @Html.ValidationMessageFor(model => model.veg, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
         </div>
-    }
-</div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.image, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" id="fileInput" accept="image/*" />
+                <input type="hidden" name="image" id="image" value="@Model.image" />
+                @Html.ValidationMessageFor(model => model.image, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        <br />
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-offset-2 col-md-2">
+                    <input class="btn btn-success" type="submit" value="Save" />
+                </div>
+                <div class="col-md-offset-1 col-md-3">
+                    <a>@Html.ActionLink("Back", "Index", routeValues: null, htmlAttributes: new { id = "create", @class = "btn btn-outline-primary" })</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+    document.querySelectorAll('input[type="radio"][name="veg"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.querySelector('[name="veg"]').value = this.value;
+        });
+    });
+        $(document).ready(function () {
+            $("#fileInput").on("change", function () {
+                var selectedFile = this.files[0];
+
+                if (selectedFile) {
+                    var filename = selectedFile.name;
+                    $('#image').val(filename);
+                }
+            });
+        });
+    </script>
+
+}

@@ -13,7 +13,7 @@
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img src="~/images/car2.jpg" class="img-fluid d-block w-100" alt="image">
-            <div class="carousel-caption d-none d-md-block" style="transform: translateY(-100%);">
+            <div class="carousel-caption d-none d-md-block" style="transform: translateY(-50%);">
                 <h1 class="shadow-lg">FoodHub</h1>
                 <h3 class="shadow-lg">“Food, Fast & Fresh”</h3>
             </div>
@@ -48,13 +48,13 @@
                 <div class="card h-100" style="max-width: 540px;">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="~/images/@restaurant.logo" class="img-fluid rounded-start" alt="...">
+                            <img src="~/images1/@restaurant.logo" class="img-fluid rounded-start" alt="...">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h4 class="card-title restName">@restaurant.RName</h4>
                                 <p class="card-text"><em>@restaurant.RDescription </em></p>
-                                    <button class="btn bg-warning align-bottom">@Html.ActionLink("Order Now", "Menu", new { restaurantId = @restaurant.Rid }, new { @class = "nav-link text-light" })</button>
+                                <button class="btn btn-warning align-bottom">@Html.ActionLink("Order Now", "Menu", new { restaurantId = @restaurant.Rid }, new { @class = "nav-link text-dark" })</button>
                             </div>
                         </div>
                     </div>

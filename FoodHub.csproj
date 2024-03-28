@@ -180,7 +180,6 @@
     <Compile Include="Controllers\FoodOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\OrderItemController.cs" />
     <Compile Include="Controllers\RestaurantController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -204,6 +203,18 @@
     <Compile Include="Migrations\202403250621175_Customertablemodify.cs" />
     <Compile Include="Migrations\202403250621175_Customertablemodify.Designer.cs">
       <DependentUpon>202403250621175_Customertablemodify.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403270515460_DatabaseAlter.cs" />
+    <Compile Include="Migrations\202403270515460_DatabaseAlter.Designer.cs">
+      <DependentUpon>202403270515460_DatabaseAlter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403270617507_Addcolumntofoodorder.cs" />
+    <Compile Include="Migrations\202403270617507_Addcolumntofoodorder.Designer.cs">
+      <DependentUpon>202403270617507_Addcolumntofoodorder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403271804397_Photosinsert.cs" />
+    <Compile Include="Migrations\202403271804397_Photosinsert.Designer.cs">
+      <DependentUpon>202403271804397_Photosinsert.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -288,26 +299,12 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Customer\Create.cshtml" />
-    <Content Include="Views\Customer\Delete.cshtml" />
-    <Content Include="Views\Customer\Details.cshtml" />
-    <Content Include="Views\Customer\Edit.cshtml" />
-    <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Food\Create.cshtml" />
     <Content Include="Views\Food\Delete.cshtml" />
-    <Content Include="Views\Food\Details.cshtml" />
     <Content Include="Views\Food\Edit.cshtml" />
     <Content Include="Views\Food\Index.cshtml" />
-    <Content Include="Views\FoodOrder\Create.cshtml" />
-    <Content Include="Views\FoodOrder\Delete.cshtml" />
     <Content Include="Views\FoodOrder\Details.cshtml" />
-    <Content Include="Views\FoodOrder\Edit.cshtml" />
     <Content Include="Views\FoodOrder\Index.cshtml" />
-    <Content Include="Views\OrderItem\Create.cshtml" />
-    <Content Include="Views\OrderItem\Delete.cshtml" />
-    <Content Include="Views\OrderItem\Details.cshtml" />
-    <Content Include="Views\OrderItem\Edit.cshtml" />
-    <Content Include="Views\OrderItem\Index.cshtml" />
     <Content Include="Views\Restaurant\Create.cshtml" />
     <Content Include="Views\Restaurant\Delete.cshtml" />
     <Content Include="Views\Restaurant\Details.cshtml" />
@@ -320,6 +317,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="images1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -363,6 +361,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202403250621175_Customertablemodify.resx">
       <DependentUpon>202403250621175_Customertablemodify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403270515460_DatabaseAlter.resx">
+      <DependentUpon>202403270515460_DatabaseAlter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403270617507_Addcolumntofoodorder.resx">
+      <DependentUpon>202403270617507_Addcolumntofoodorder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403271804397_Photosinsert.resx">
+      <DependentUpon>202403271804397_Photosinsert.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

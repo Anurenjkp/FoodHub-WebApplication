@@ -13,8 +13,8 @@ namespace FoodHub.Models
         public int Oid { get; set; }
         [Required]
         public int Cid { get; set; }
-        public int Rid { get; set; }
 
+        public int Rid { get; set; }
         public DateTime date { get; set; }
         public float totalPrice { get; set; }
         public string orderType { get; set; }
@@ -23,5 +23,7 @@ namespace FoodHub.Models
         public int Token { get; set; }
         [ForeignKey("Cid")]
         public Customer customer { get; set; }
+
+
     }
 }

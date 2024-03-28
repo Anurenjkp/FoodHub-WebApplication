@@ -6,10 +6,20 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
+using FoodHub.Models;
+using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using FoodHub.Models;
 
 namespace FoodHub.Controllers
 {
+    public class Item
+    {
+        public string FoodName { get; set; }
+        public int Quantity { get; set; }
+    }
+    [Authorize(Roles = "RestaurantManager")]
     public class FoodOrderController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -17,7 +27,9 @@ namespace FoodHub.Controllers
         // GET: FoodOrder
         public ActionResult Index()
         {
-            var foodOrders = db.FoodOrders.Include(f => f.customer);
+            string adminId = User.Identity.GetUserId();
+            ApplicationUser admin = db.Users.Find(adminId);
+            var foodOrders = db.FoodOrders.Where(f => f.Rid == admin.fhID).Include(f => f.customer).OrderByDescending(f => f.Oid);
             return View(foodOrders.ToList());
         }
 
@@ -36,88 +48,51 @@ namespace FoodHub.Controllers
             return View(foodOrder);
         }
 
-        // GET: FoodOrder/Create
-        public ActionResult Create()
-        {
-            ViewBag.Cid = new SelectList(db.Customers, "Cid", "CName");
-            return View();
-        }
-
-        // POST: FoodOrder/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Oid,Cid,date,totalPrice,orderType,paymentStatus,orderStatus,Token")] FoodOrder foodOrder)
+        public ActionResult getfooditems(int Orderid)
         {
-            if (ModelState.IsValid)
-            {
-                db.FoodOrders.Add(foodOrder);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            List<Item> items = new List<Item>();
 
-            ViewBag.Cid = new SelectList(db.Customers, "Cid", "CName", foodOrder.Cid);
-            return View(foodOrder);
+            List<int> Fids = db.OrderItems.Where(a => a.Oid == Orderid).Select(a => a.Fid).ToList();
+            List<int> quantity = db.OrderItems.Where(oi => oi.Oid == Orderid).Select(oi => oi.quantity).ToList();
+            List<string> FoodName = db.Foods.Where(food => Fids.Contains(food.Fid)).Select(oi => oi.FName).ToList();
+            for (int i = 0; i < FoodName.Count; i++)
+            {
+                items.Add(new Item
+                {
+                    FoodName = FoodName[i],
+                    Quantity = quantity[i]
+                });
+            }
+            string json = JsonConvert.SerializeObject(items);
+            return Content(json, "application/json");
+
         }
 
-        // GET: FoodOrder/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            FoodOrder foodOrder = db.FoodOrders.Find(id);
-            if (foodOrder == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.Cid = new SelectList(db.Customers, "Cid", "CName", foodOrder.Cid);
-            return View(foodOrder);
-        }
-
-        // POST: FoodOrder/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Oid,Cid,date,totalPrice,orderType,paymentStatus,orderStatus,Token")] FoodOrder foodOrder)
+        public ActionResult acceptOrder(int orderId)
         {
-            if (ModelState.IsValid)
+            var orderToUpdate = db.FoodOrders.Find(orderId);
+            if (orderToUpdate != null)
             {
-                db.Entry(foodOrder).State = EntityState.Modified;
+                orderToUpdate.orderStatus = "accepted";
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(new { success = true, message = "Order Accepted" });
             }
-            ViewBag.Cid = new SelectList(db.Customers, "Cid", "CName", foodOrder.Cid);
-            return View(foodOrder);
+            return Json(new { success = false, message = "Error while accepting Order" });
         }
 
-        // GET: FoodOrder/Delete/5
-        public ActionResult Delete(int? id)
+        [HttpPost]
+        public ActionResult orderReady(int orderId)
         {
-            if (id == null)
+            var orderToUpdate = db.FoodOrders.Find(orderId);
+            if (orderToUpdate != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                orderToUpdate.orderStatus = "done";
+                db.SaveChanges();
+                return Json(new { success = true, message = "Order Ready to  PickUp" });
             }
-            FoodOrder foodOrder = db.FoodOrders.Find(id);
-            if (foodOrder == null)
-            {
-                return HttpNotFound();
-            }
-            return View(foodOrder);
-        }
-
-        // POST: FoodOrder/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            FoodOrder foodOrder = db.FoodOrders.Find(id);
-            db.FoodOrders.Remove(foodOrder);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(new { success = false, message = "Error while accepting Order" });
         }
 
         protected override void Dispose(bool disposing)

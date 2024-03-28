@@ -4,15 +4,14 @@
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
+<h2>Create Food</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Food</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -34,18 +33,27 @@
         <div class="form-group">
             @Html.LabelFor(model => model.image, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.image, new { htmlAttributes = new { @class = "form-control" } })
+                <input type="file" id="fileInput" accept="image/*" />
+                <input type="hidden" name="image" id="image" />
                 @Html.ValidationMessageFor(model => model.image, "", new { @class = "text-danger" })
             </div>
         </div>
 
+
+
         <div class="form-group">
             @Html.LabelFor(model => model.veg, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.veg, new { htmlAttributes = new { @class = "form-control" } })
+                <label>
+                    <input type="radio" name="veg" value="1" /> Veg
+                </label>
+                <label>
+                    <input type="radio" name="veg" value="0" /> Non-Veg
+                </label>
                 @Html.ValidationMessageFor(model => model.veg, "", new { @class = "text-danger" })
             </div>
         </div>
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.foodCount, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -55,26 +63,40 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Rid, "Rid", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Rid", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Rid, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+            <div class="row">
+                <div class="col-md-offset-2 col-md-2">
+                    <input class="btn btn-success" type="submit" value="Create" />
+                </div>
+                <div class="col-md-offset-1 col-md-3">
+                    <a>@Html.ActionLink("Back", "Index", routeValues: null, htmlAttributes: new { id = "create", @class = "btn btn-outline-primary" })</a>
+
+                </div>
             </div>
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    document.querySelectorAll('input[type="radio"][name="veg"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.querySelector('[name="veg"]').value = this.value;
+        });
+    });
+        $(document).ready(function () {
+            $("#fileInput").on("change", function () {
+                var selectedFile = this.files[0];
+
+                if (selectedFile) {
+                    var filename = selectedFile.name;
+                    $('#image').val(filename);
+                }
+            });
+        });
+    </script>
+
 }

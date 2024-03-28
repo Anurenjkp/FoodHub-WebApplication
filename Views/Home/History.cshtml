@@ -1,18 +1,18 @@
 ﻿@model IEnumerable<FoodHub.Models.FoodOrder>
 <h1 class="text-center restName">History</h1>
-<br/>
+<br />
 <table class="table table-hover">
-     <thead>
+    <thead>
         <tr class="table-dark">
-             <th>Token</th>
-             <th>Date</th>
-             <th>Price</th>
-             <th>Order Status</th>
-             <th></th>
-         </tr>
-     </thead>
-     <tbody>
-        @foreach(var order in Model)
+            <th>Token</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th>Order Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
         {
             <tr>
                 <td>@order.Token@order.Oid</td>
@@ -40,11 +40,12 @@
                         <span class="badge bg-danger">Failed</span>
                     </td>
                 }
-            <td>
-                <button class="btn bg-dark">@Html.ActionLink("Repeat Order", "RepeatOrder", new { id = order.Oid }, new { @class = "nav-link text-light" })</button>
-            </td>
+                <td>
+                    <button class="btn bg-dark p-1">@Html.ActionLink("Details", "ConfirmPage", new { id = order.Oid }, new { @class = "nav-link text-light" })</button>
+                    <button class="btn btn-outline-warning">@Html.ActionLink("Repeat Order", "RepeatOrder", new { id = order.Oid }, new { @class = "nav-link text-dark" })</button>
+                </td>
             </tr>
         }
     </tbody>
- </table>
+</table>
 

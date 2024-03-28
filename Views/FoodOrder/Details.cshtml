@@ -7,68 +7,132 @@
 <h2>Details</h2>
 
 <div>
-    <h4>FoodOrder</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.customer.CName)
+            Order Date :  @Html.DisplayFor(model => model.date)
+        </dt>
+        <dd></dd>
+
+        <dt>
+            Total Price : @Html.DisplayFor(model => model.totalPrice)
+        </dt>
+
+        <dd></dd>
+        <dt>
+            Order Type :  @Html.DisplayFor(model => model.orderType)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.customer.CName)
+
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.date)
+            Payment Status :  @Html.DisplayFor(model => model.paymentStatus)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.date)
+
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.totalPrice)
-        </dt>
+            @Html.DisplayNameFor(model => model.orderStatus) : <input type="text" readonly id="status" value="@Model.orderStatus" />
 
-        <dd>
-            @Html.DisplayFor(model => model.totalPrice)
+        </dt>
+        <dd id="statustext">
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.orderType)
+            @Html.DisplayNameFor(model => model.Token) :  @Model.Token@Model.Oid
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.orderType)
+
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.paymentStatus)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.paymentStatus)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.orderStatus)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.orderStatus)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Token)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Token)
-        </dd>
-
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Oid }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+<div id="foodTableContainer"></div>
+<button class="btn btn-lg btn-warning" id="acceptOrder">Accept Order</button>
+<button class="btn btn-lg btn-success" id="orderReady">Order Ready</button>
+<a>@Html.ActionLink("Back to Orders", "Index", routeValues: null, htmlAttributes: new { id = "create", @class = "btn btn-lg btn-outline-dark" })</a>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var status = $('#status').val();
+            if ( status == "pending") {
+                $('#acceptOrder').show();
+                $('#orderReady').hide();
+            }
+            else if (status == "accepted") {
+                $('#acceptOrder').hide();
+                $('#orderReady').show();
+            }
+            else
+            {
+                $('#acceptOrder').hide();
+                $('#orderReady').hide();
+            }
+                $.ajax({
+                    type: 'POST',
+                    url: '/FoodOrder/getfooditems',
+                    data: { Orderid: @Model.Oid},
+                    success: function (response) {
+
+                        var $table = $('<table>').addClass('food-table table');
+
+                        var $thead = $('<thead>').appendTo($table);
+                        var $headerRow = $('<tr>').appendTo($thead);
+                        $('<th>').text('Food Name').appendTo($headerRow);
+                        $('<th>').text('Quantity').appendTo($headerRow);
+
+                        var $tbody = $('<tbody>').appendTo($table);
+                        response.forEach(function (item) {
+                            var $row = $('<tr>').appendTo($tbody);
+                            $('<td>').text(item.FoodName).appendTo($row);
+                            $('<td>').text(item.Quantity).appendTo($row);
+                        });
+                        $('#foodTableContainer').append($table);
+
+                    },
+                    error: function (error) {
+                        console.error('Error confirming order:', error.message);
+                    }
+                });
+            $('#acceptOrder').click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: '/FoodOrder/acceptOrder',
+                    data: { orderId: @Model.Oid},
+                    success: function (response) {
+                        alert(response.message);
+                        $('#acceptOrder').hide();
+                        $('#orderReady').show();
+                        $('$status').val("accepted");
+                    },
+                    error: function (error) {
+                        alert(response.message);
+
+                    }
+                    });
+            });
+            $('#orderReady').click(function () {
+    $.ajax({
+        type: 'POST',
+        url: '/FoodOrder/orderReady',
+        data: { orderId: @Model.Oid},
+        success: function (response) {
+            alert(response.message);
+            $('#acceptOrder').hide();
+            $('#orderReady').hide();
+            $('$status').val("done");
+        },
+        error: function (error) {
+            alert(response.message);
+        }
+        });
+});
+        });
+    </script>
+}

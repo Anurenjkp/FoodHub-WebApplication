@@ -8,24 +8,24 @@ using System.Web;
 using System.Web.Mvc;
 using FoodHub.Models;
 using Microsoft.AspNet.Identity;
+using FoodHub.Models;
 
 namespace FoodHub.Controllers
 {
+    [Authorize(Roles = "RestaurantManager")]
     public class FoodController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Food
+
         public ActionResult Index()
         {
-
             string adminId = User.Identity.GetUserId();
             ApplicationUser admin = db.Users.Find(adminId);
             var foods = db.Foods.Where(f => f.Rid == admin.fhID).ToList();
-            Restaurant rest = db.Restaurants.Where(f => f.Rid == admin.fhID).SingleOrDefault();
-            if(rest != null)
-            ViewBag.restname = rest.RName;
-            
+            var rest = db.Restaurants.Where(r => r.Rid == admin.fhID).SingleOrDefault();
+            ViewBag.restName = rest.RName;
             return View(foods);
         }
 
@@ -58,6 +58,9 @@ namespace FoodHub.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Fid,FName,price,image,veg,foodCount,Rid")] Food food)
         {
+            string adminId = User.Identity.GetUserId();
+            ApplicationUser admin = db.Users.Find(adminId);
+            food.Rid = admin.fhID;
             if (ModelState.IsValid)
             {
                 db.Foods.Add(food);
@@ -92,6 +95,9 @@ namespace FoodHub.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Fid,FName,price,image,veg,foodCount,Rid")] Food food)
         {
+            string adminId = User.Identity.GetUserId();
+            ApplicationUser admin = db.Users.Find(adminId);
+            food.Rid = admin.fhID;
             if (ModelState.IsValid)
             {
                 db.Entry(food).State = EntityState.Modified;
