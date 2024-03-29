@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<FoodHub.Models.Food>
 
-<div style="position: sticky; top: 0; z-index: 1; background: white; border-bottom: 2px solid black; ">
+<div style="position: sticky; top: 65.5px; z-index: 1; background: white; border-bottom: 2px solid black; ">
     <div class="row">
         <div class="col-sm-10">
-            <h3 class="restName"><img src="~/images1/@ViewBag.logo" style="width:60px;" /> @ViewBag.restName</h3>
+            <h3 class="restName"><img src="~/images1/@ViewBag.logo" style="width:60px; border-radius: 50px;" /> @ViewBag.restName</h3>
         </div>
         <div class="col-sm-2 p-2">
             <form method="post" action="@Url.Action("Cart", "Home")">
@@ -76,7 +76,7 @@
                     if (foodList.indexOf(foodId) === -1) {
                         foodList.push(foodId);
                         $button.text("Added");
-                        $button.toggleClass("btn-warning btn-success");
+                        $button.toggleClass("btn-warning btn-outline-dark");
                         $(".removeFromCart[data-food-id='" + foodId + "']").removeAttr("hidden");
                         if (foodList.length > 0) {
                             $("#cartbtn").removeAttr("disabled");
