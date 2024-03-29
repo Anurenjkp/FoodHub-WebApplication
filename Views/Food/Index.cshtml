@@ -8,7 +8,7 @@
         <h2 class="restName">@ViewBag.restName</h2>
     </div>
     <div class="col">
-        <a>@Html.ActionLink("Add +", "Create", routeValues: null, htmlAttributes: new { id = "create", @class = "btn btn-primary" })</a>
+        <a>@Html.ActionLink("Add +", "Create", routeValues: null, htmlAttributes: new { id = "create", @class = "btn btn-secondary" })</a>
     </div>
 </div>
 <br />
@@ -18,13 +18,16 @@
             Food Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.price)
+            @*@@Html.DisplayNameFor(model => model.price)*@
+            Price
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.veg)
+            @*@Html.DisplayNameFor(model => model.veg)*@
+            Veg/N.Veg
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.foodCount)
+           @* @Html.DisplayNameFor(model => model.foodCount)*@
+            Food Count
         </th>
         <th></th>
     </tr>
@@ -39,7 +42,7 @@
                 @Html.DisplayFor(modelItem => item.price)
             </td>
             <td>
-                @if (item.veg == "1")
+                @if (item.veg == "Yes")
                 {
                     <span class="badge text-bg-success">⚪</span>
                 }
@@ -52,7 +55,7 @@
                 @Html.DisplayFor(modelItem => item.foodCount)
             </td>
             <td>
-                <button class="btn btn-outline-warning"> @Html.ActionLink("Edit", "Edit", new { id = item.Fid }, new { @class = "nav-link" }) </button>
+                <button class="btn btn-outline-primary"> @Html.ActionLink("Edit", "Edit", new { id = item.Fid }, new { @class = "nav-link" }) </button>
                 <button class="btn btn-outline-danger"> @Html.ActionLink("Delete", "Delete", new { id = item.Fid }, new { @class = "nav-link" }) </button>
             </td>
         </tr>

@@ -20,12 +20,12 @@
                 <td>@order.totalPrice</td>
                 @if (order.orderStatus == "pending")
                 {
-                    <td><span class="badge bg-primary">Waiting</span></td>
+                    <td><span class="badge bg-warning">Waiting</span></td>
                 }
                 else if (order.orderStatus == "accepted")
                 {
                     <td>
-                        <span class="badge bg-warning">Accepted</span>
+                        <span class="badge bg-primary">Accepted</span>
                     </td>
                 }
                 else if (order.orderStatus == "done")
@@ -42,7 +42,7 @@
                 }
                 <td>
                     <button class="btn bg-dark p-1">@Html.ActionLink("Details", "ConfirmPage", new { id = order.Oid }, new { @class = "nav-link text-light" })</button>
-                    <button class="btn btn-outline-warning">@Html.ActionLink("Repeat Order", "RepeatOrder", new { id = order.Oid }, new { @class = "nav-link text-dark" })</button>
+                    <button class="btn btn-outline-dark">@Html.ActionLink("Repeat Order", "RepeatOrder", new { id = order.Oid }, new { @class = "nav-link" })</button>
                 </td>
             </tr>
         }

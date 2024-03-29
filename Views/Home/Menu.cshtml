@@ -8,7 +8,12 @@
         <div class="col-sm-2 p-2">
             <form method="post" action="@Url.Action("Cart", "Home")">
                 <input type="hidden" id="flist" name="flist" value="[]" />
-                <button type="submit" class="btn btn-lg btn-dark" style="border-radius:100px;" id="cartbtn" disabled>🛒</button>
+                <button type="submit" class="btn btn-dark position-relative" style="border-radius:100px;" id="cartbtn" disabled>🛒
+                    <span class="cartbadge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                    </span>
+                </button>
+                
             </form>
         </div>
     </div>
@@ -75,7 +80,7 @@
                         $(".removeFromCart[data-food-id='" + foodId + "']").removeAttr("hidden");
                         if (foodList.length > 0) {
                             $("#cartbtn").removeAttr("disabled");
-                            $("#cartbtn").text("🛒 " + foodList.length);
+                            $(".cartbadge").text(foodList.length);
                         }
                         console.log("Cart List : " + foodList);
                         $('#flist').val(JSON.stringify(foodList));
@@ -91,7 +96,7 @@
                         $(this).attr("hidden", true);
                         $(".addToCart[data-food-id='" + foodId + "']").text("Add to Cart");
                         $(".addToCart[data-food-id='" + foodId + "']").toggleClass("btn-success btn-warning");
-                        $("#cartbtn").text("🛒 " + foodList.length);
+                        $(".cartbadge").text(foodList.length);
                         if (foodList.length == 0)
                             $("#cartbtn").attr("disabled", true);
                     }
