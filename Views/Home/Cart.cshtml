@@ -4,7 +4,7 @@
 {
     <center>
         <input type="hidden" id="Orderid" value="0" />
-        <button class="btn btn-lg btn-success" id="next">Order Placed!</button>
+        <button class="btn btn-lg btn-dark" id="next">Go to Orders</button>
     </center>
     <table class="table table-hover">
         <thead>
@@ -156,17 +156,17 @@ else
                     contentType: 'application/json',
                     dataType: "JSON",
                     success: function (response) {
-                        alert(response.message);
+                        //alert(response.message);
                         if (response.success) {
                             $('#Orderid').val(response.data);
-                            toastr.success("Success kadayadi mone")
+                            toastr.success('Success')
                             $('#next').show();
                             $('#cancel').hide();
                             $('#confirmOrder').hide();
                         }
                     },
                     error: function (error) {
-                        console.error('Error confirming order:', error.message);
+                        toastr.error('Error confirming order:', error.message);
                     }
                 });
             }

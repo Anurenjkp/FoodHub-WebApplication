@@ -104,7 +104,7 @@ namespace FoodHub.Controllers
             return View(customer);
         }
 
-        // POST: Customer/Delete/5
+        // POST: Customer/Delete/5 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

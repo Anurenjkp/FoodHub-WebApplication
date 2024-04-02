@@ -14,11 +14,11 @@ using FoodHub.Models;
 
 namespace FoodHub.Controllers
 {
-    public class Item
+    /*public class Item
     {
         public string FoodName { get; set; }
         public int Quantity { get; set; }
-    }
+    }*/
     [Authorize(Roles = "RestaurantManager")]
     public class FoodOrderController : Controller
     {
@@ -51,14 +51,14 @@ namespace FoodHub.Controllers
         [HttpPost]
         public ActionResult getfooditems(int Orderid)
         {
-            List<Item> items = new List<Item>();
+            List < ItemViewModel> items = new List<ItemViewModel>();
 
             List<int> Fids = db.OrderItems.Where(a => a.Oid == Orderid).Select(a => a.Fid).ToList();
             List<int> quantity = db.OrderItems.Where(oi => oi.Oid == Orderid).Select(oi => oi.quantity).ToList();
             List<string> FoodName = db.Foods.Where(food => Fids.Contains(food.Fid)).Select(oi => oi.FName).ToList();
             for (int i = 0; i < FoodName.Count; i++)
             {
-                items.Add(new Item
+                items.Add(new ItemViewModel
                 {
                     FoodName = FoodName[i],
                     Quantity = quantity[i]

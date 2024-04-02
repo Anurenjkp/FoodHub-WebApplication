@@ -221,6 +221,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Food.cs" />
     <Compile Include="Models\FoodOrder.cs" />
+    <Compile Include="Models\FoodViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OrderItem.cs" />

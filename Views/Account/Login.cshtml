@@ -28,6 +28,7 @@
                                 @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
+                        <br />
                         <div class="row">
                             @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
                             <div class="col-md-10">
@@ -51,7 +52,8 @@
                         <br />
 
                         <p>
-                            @Html.ActionLink("Register as a new user", "Register")
+                            <button class="btn btn-outline-secondary" type="button" style="color: black" onclick="location.href='@Url.Action("Register")'">Register as new user</button>
+                            @* @Html.ActionLink("Register as a new user", "Register")*@
                         </p>
                         @* Enable this once you have account confirmation enabled for password reset functionality
                             <p>

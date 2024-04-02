@@ -163,6 +163,8 @@ namespace FoodHub.Controllers
                 if (result.Succeeded)
                 {
 
+                    //re
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     return RedirectToAction("Index", "Home");

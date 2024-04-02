@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace FoodHub.Controllers
 {
-    public class NewOrderItem
+    /*public class NewOrderItem
     {
         public int Rid { get; set; }
         public float totalPrice { get; set; }
@@ -20,7 +20,7 @@ namespace FoodHub.Controllers
         public int[] quantity { get; set; }
         public int[] FoodList { get; set; }
         public int Token { get; set; }
-    }
+    }*/
     public class HomeController : Controller
     {
         private ApplicationDbContext _context = new ApplicationDbContext();
@@ -34,6 +34,12 @@ namespace FoodHub.Controllers
             }
             return View(_context.Restaurants.ToList());
         }
+        [AllowAnonymous]
+        public ActionResult About()
+        {
+            return View();
+        }
+
 
         public ActionResult Menu(int? restaurantId)
         {
@@ -82,14 +88,14 @@ namespace FoodHub.Controllers
         [HttpPost]
         public ActionResult getfooditems(int Orderid)
         {
-            List<Item> items = new List<Item>();
+            List<ItemViewModel> items = new List<ItemViewModel>();
 
             List<int> Fids = _context.OrderItems.Where(a => a.Oid == Orderid).Select(a => a.Fid).ToList();
             List<int> quantity = _context.OrderItems.Where(oi => oi.Oid == Orderid).Select(oi => oi.quantity).ToList();
             List<string> FoodName = _context.Foods.Where(food => Fids.Contains(food.Fid)).Select(oi => oi.FName).ToList();
             for (int i = 0; i < FoodName.Count; i++)
             {
-                items.Add(new Item
+                items.Add(new ItemViewModel
                 {
                     FoodName = FoodName[i],
                     Quantity = quantity[i]
@@ -101,7 +107,7 @@ namespace FoodHub.Controllers
         }
 
         [HttpPost]
-        public ActionResult confirmOrder(NewOrderItem orderitem)
+        public ActionResult confirmOrder(FoodViewModel orderitem)
         {
 
             var NewOrder = new FoodOrder();
